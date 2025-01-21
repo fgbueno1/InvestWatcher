@@ -16,18 +16,28 @@ public class Function
     };
 
     private readonly string telegramUsername = "@your_username";
-    public async Task FunctionHandler(ILambdaContext context)
+
+    public class TelegramBot
+    {
+        public string? botToken;
+        public string? chatId;
+        public string? message;
+    }
+
+    public async Task FunctionHandler()
     {
         bool mention = false;
-        var botToken = Environment.GetEnvironmentVariable("TelegramBotID"); ;
-        var chatId = Environment.GetEnvironmentVariable("ChatID"); ;
-        string message = "";
+        TelegramBot _bot = new()
+        {
+            botToken = Environment.GetEnvironmentVariable("TelegramBotID"),
+            chatId = Environment.GetEnvironmentVariable("ChatID")
+    };
 
         foreach (var coin in coins)
         {
             var values = coin.Value[0];
             var price = await GetCryptoPriceAsync(coin.Key, values.Item1);
-            message += $"{coin.Key} current price: {values.Item1} {price}\n\n";
+            _bot.message += $"{coin.Key} current price: {values.Item1} {price}\n\n";
             if (price <= values.Item2)
             {
                 mention = true;
@@ -35,30 +45,28 @@ public class Function
         }
         if (mention)
         {
-            message += telegramUsername;
+            _bot.message += telegramUsername;
         }
-        #pragma warning disable CS8604
-        await SendMessageToTelegramAsync(botToken, chatId, message);
-        #pragma warning restore CS8604
+        await SendMessageToTelegramAsync(_bot);
     }
 
-    public static async Task<double> GetCryptoPriceAsync(string cryptoSymbol, string destCurrency)
+    private static async Task<double> GetCryptoPriceAsync(string cryptoSymbol, string destCurrency)
     {
         using var httpClient = new HttpClient();
         var response = await httpClient.GetAsync($"https://api.coinbase.com/v2/exchange-rates?currency={cryptoSymbol}");     
         var jsonString = await response.Content.ReadAsStringAsync();
         var jsonObject = JObject.Parse(jsonString);
-        #pragma warning disable CS8602 // Dereference of a possibly null reference.
+        #pragma warning disable CS8602
         double price = Convert.ToDouble(jsonObject["data"]["rates"][destCurrency].ToString());
-        #pragma warning restore CS8602 // Dereference of a possibly null reference.
+        #pragma warning restore CS8602
 
         return Math.Round(price, 2);
     }
 
-    public static async Task SendMessageToTelegramAsync(string botToken, string chatId, string message)
+    private static async Task SendMessageToTelegramAsync(TelegramBot _bot)
     {
         using var httpClient = new HttpClient();
-        var url = $"https://api.telegram.org/bot{botToken}/sendMessage?chat_id={chatId}&text={message}";
+        var url = $"https://api.telegram.org/bot{_bot.botToken}/sendMessage?chat_id={_bot.chatId}&text={_bot.message}";
         await httpClient.GetAsync(url);
     }
 }
