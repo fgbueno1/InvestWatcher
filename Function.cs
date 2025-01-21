@@ -31,7 +31,7 @@ public class Function
         {
             botToken = Environment.GetEnvironmentVariable("TelegramBotID"),
             chatId = Environment.GetEnvironmentVariable("ChatID")
-    };
+        };
 
         foreach (var coin in coins)
         {
