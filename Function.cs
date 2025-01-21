@@ -15,7 +15,7 @@ public class Function
         {"EURC", new List<(string, double)>{("BRL", 6.15)}}
     };
 
-    private readonly string telegramUsername = "@Cr0wn_T";
+    private readonly string telegramUsername = "@your_username";
 
     public class TelegramBot
     {
