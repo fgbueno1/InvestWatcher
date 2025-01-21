@@ -8,14 +8,14 @@ namespace InvestWatch;
 
 public class Function
 {
-    private Dictionary<string, List<(string, double)>> coins = new Dictionary<string, List<(string, double)>>
+    private readonly Dictionary<string, List<(string, double)>> coins = new()
     {
         {"BTC", new List<(string, double)>{("USDT", 86000)}},
         {"USDT", new List <(string, double)>{("BRL", 6)}},
         {"EURC", new List<(string, double)>{("BRL", 6.15)}}
     };
 
-    private string telegramUsername = "@your_username";
+    private readonly string telegramUsername = "@your_username";
     public async Task FunctionHandler(ILambdaContext context)
     {
         bool mention = false;
@@ -42,7 +42,7 @@ public class Function
         #pragma warning restore CS8604
     }
 
-    public async Task<double> GetCryptoPriceAsync(string cryptoSymbol, string destCurrency)
+    public static async Task<double> GetCryptoPriceAsync(string cryptoSymbol, string destCurrency)
     {
         using var httpClient = new HttpClient();
         var response = await httpClient.GetAsync($"https://api.coinbase.com/v2/exchange-rates?currency={cryptoSymbol}");     
@@ -55,7 +55,7 @@ public class Function
         return Math.Round(price, 2);
     }
 
-    public async Task SendMessageToTelegramAsync(string botToken, string chatId, string message)
+    public static async Task SendMessageToTelegramAsync(string botToken, string chatId, string message)
     {
         using var httpClient = new HttpClient();
         var url = $"https://api.telegram.org/bot{botToken}/sendMessage?chat_id={chatId}&text={message}";
