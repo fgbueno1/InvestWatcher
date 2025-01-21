@@ -36,5 +36,5 @@ Follow the steps below to configure your telegram bot.
 To get your bot to mention you when some currency is below your configured exchange rate price just add your telegram username in the telegramUsername variable.
 
 ```csharp
-private string telegramUsername = "@your_username;
+private string telegramUsername = "@your_username";
 ```
