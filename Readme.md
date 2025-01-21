@@ -9,12 +9,12 @@ To run the application you need to configure first which cyptocurrencies you wan
 To configurate which cryptocurrencies you want to track you just need to add the cryptocurrency in the coins dictionary like the example below.
 
 ```csharp
-private Dictionary<string, List<(string, double)>> coins = new Dictionary<string, List<(string, double)>>
-{
-    {"BTC", new List<(string, double)>{("USDT", 86000)}},
-    {"USDT", new List <(string, double)>{("BRL", 6)}},
-    {"EURC", new List<(string, double)>{("BRL", 6.15)}}
-};
+private readonly Dictionary<string, List<(string, double)>> coins = new()
+    {
+        {"BTC", new List<(string, double)>{("USDT", 86000)}},
+        {"USDT", new List <(string, double)>{("BRL", 6)}},
+        {"EURC", new List<(string, double)>{("BRL", 6.15)}}
+    };
 ```
 
 The Dictionary Key is the cryptocurrency you want to track the exchange rate;
@@ -36,5 +36,5 @@ Follow the steps below to configure your telegram bot.
 To get your bot to mention you when some currency is below your configured exchange rate price just add your telegram username in the telegramUsername variable.
 
 ```csharp
-private string telegramUsername = "@your_username";
+private readonly string telegramUsername = "@your_username";
 ```
