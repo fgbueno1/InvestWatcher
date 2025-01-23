@@ -9,17 +9,17 @@ To run the application you need to configure first which cyptocurrencies you wan
 To configurate which cryptocurrencies you want to track you just need to add the cryptocurrency in the coins dictionary like the example below.
 
 ```csharp
-private readonly Dictionary<string, List<(string, double)>> coins = new()
+private readonly Dictionary<string, CoinsSetup> coins = new()
     {
-        {"BTC", new List<(string, double)>{("USDT", 86000)}},
-        {"USDT", new List <(string, double)>{("BRL", 6)}},
-        {"EURC", new List<(string, double)>{("BRL", 6.15)}}
+        {"BTC", new CoinsSetup{coinPair="USDT", coinPrice=86000 }},
+        {"USDT", new CoinsSetup{coinPair="BRL", coinPrice=5.90}},
+        {"EURC", new CoinsSetup{coinPair="BRL", coinPrice=6.15 }}
     };
 ```
 
 The Dictionary Key is the cryptocurrency you want to track the exchange rate;
 
-The Dictionary Value is a list where the first value (string) is the currency pair to know the exchange rate. The second value (double) is the price you want to get notified when the exchange rate is below it (example: I want to get notified when BTC is below 86K USDT).
+The Dictionary Value is a class where you can setup the currency pair to know the exchange rate and the price you want to get notified when the exchange rate is below it (example: I want to get notified when BTC is below 86K USDT).
 
 ## Configurating Telegram Bot
 

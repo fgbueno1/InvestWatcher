@@ -8,11 +8,17 @@ namespace InvestWatch;
 
 public class Function
 {
-    private readonly Dictionary<string, List<(string, double)>> coins = new()
+    public class CoinsSetup
     {
-        {"BTC", new List<(string, double)>{("USDT", 86000)}},
-        {"USDT", new List <(string, double)>{("BRL", 6)}},
-        {"EURC", new List<(string, double)>{("BRL", 6.15)}}
+        public required string coinPair;
+        public required double coinPrice;
+    }
+
+    private readonly Dictionary<string, CoinsSetup> coins = new()
+    {
+        {"BTC", new CoinsSetup{coinPair="USDT", coinPrice=86000 }},
+        {"USDT", new CoinsSetup{coinPair="BRL", coinPrice=5.90}},
+        {"EURC", new CoinsSetup{coinPair="BRL", coinPrice=6.15 }}
     };
 
     private readonly string telegramUsername = "@your_username";
@@ -35,10 +41,9 @@ public class Function
 
         foreach (var coin in coins)
         {
-            var values = coin.Value[0];
-            var price = await GetCryptoPriceAsync(coin.Key, values.Item1);
-            _bot.message += $"{coin.Key} current price: {values.Item1} {price}\n\n";
-            if (price <= values.Item2)
+            var price = await GetCryptoPriceAsync(coin.Key, coin.Value.coinPair);
+            _bot.message += $"{coin.Key} current price: {coin.Value.coinPair} {price}\n\n";
+            if (price <= coin.Value.coinPrice)
             {
                 mention = true;
             }
